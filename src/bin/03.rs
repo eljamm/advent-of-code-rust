@@ -4,7 +4,7 @@ use regex::Regex;
 
 fn found_symbol(segment: &str) -> bool {
     for c in segment.chars() {
-        if !c.is_digit(10) && c != '.' {
+        if !c.is_ascii_digit() && c != '.' {
             return true;
         }
     }
@@ -32,11 +32,9 @@ pub fn part_one(input: &str) -> Option<u32> {
                 let mut start = result.start();
                 let mut end = result.end();
 
-                if start > 0 {
-                    start = start - 1;
-                }
+                start = start.saturating_sub(1);
                 if end < line.len() {
-                    end = end + 1;
+                    end += 1;
                 }
 
                 let check_line = &line[start..end];
@@ -65,7 +63,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     let lines = input.lines().collect::<Vec<_>>();
     let length = lines.len() - 1;
 
-    lines
+    let final_sum = lines
         .iter()
         .enumerate()
         .filter_map(|(i, line)| {
@@ -81,10 +79,10 @@ pub fn part_two(input: &str) -> Option<u32> {
 
                             // Max range of 3 in each direction
                             if start > 2 {
-                                start = start - 3;
+                                start -= 3;
                             }
                             if end + 2 < line.len() {
-                                end = end + 3;
+                                end += 3;
                             }
 
                             // Space around the symbol to check
@@ -129,9 +127,9 @@ pub fn part_two(input: &str) -> Option<u32> {
                 None
             }
         })
-        .sum::<u32>() // final sum
-        .try_into()
-        .ok()
+        .sum::<u32>();
+
+    Some(final_sum)
 }
 
 #[cfg(test)]

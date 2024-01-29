@@ -2,7 +2,7 @@ advent_of_code::solution!(2);
 
 use std::ops::{Index, IndexMut};
 
-fn get_max_cubes(color: &str) -> i32 {
+fn get_max_cubes(color: &str) -> u32 {
     match color {
         "red" => 12,
         "green" => 13,
@@ -12,14 +12,14 @@ fn get_max_cubes(color: &str) -> i32 {
 }
 
 struct Cubes {
-    red: i32,
-    green: i32,
-    blue: i32,
+    red: u32,
+    green: u32,
+    blue: u32,
 }
 
 impl Index<&'_ str> for Cubes {
-    type Output = i32;
-    fn index(&self, s: &str) -> &i32 {
+    type Output = u32;
+    fn index(&self, s: &str) -> &u32 {
         match s {
             "red" => &self.red,
             "green" => &self.green,
@@ -30,7 +30,7 @@ impl Index<&'_ str> for Cubes {
 }
 
 impl IndexMut<&'_ str> for Cubes {
-    fn index_mut(&mut self, s: &str) -> &mut i32 {
+    fn index_mut(&mut self, s: &str) -> &mut u32 {
         match s {
             "red" => &mut self.red,
             "green" => &mut self.green,
@@ -43,7 +43,7 @@ impl IndexMut<&'_ str> for Cubes {
 fn examine_cubes(cubes: Vec<Vec<&str>>) -> bool {
     for cube in cubes.iter() {
         let color = cube[1];
-        let number = cube[0].parse::<i32>().unwrap();
+        let number = cube[0].parse::<u32>().unwrap();
         let max_number = get_max_cubes(color);
 
         // If the game is impossible, skip the rest of the cubes
@@ -66,7 +66,7 @@ fn examine_game(sets: &Vec<&str>) -> bool {
         let possible_game = examine_cubes(cubes);
 
         // If the game is impossible, skip its unchecked sets
-        if possible_game == false {
+        if !possible_game {
             return false;
         }
     }
@@ -74,10 +74,10 @@ fn examine_game(sets: &Vec<&str>) -> bool {
     true
 }
 
-fn examine_cubes_two(cubes: Vec<Vec<&str>>, min_cubes: &mut Cubes) -> Option<i32> {
+fn examine_cubes_two(cubes: Vec<Vec<&str>>, min_cubes: &mut Cubes) -> Option<u32> {
     for cube in cubes.iter() {
         let color = cube[1];
-        let number = cube[0].parse::<i32>().unwrap();
+        let number = cube[0].parse::<u32>().unwrap();
 
         // Determine the minimum number of cubes
         if number > min_cubes[color] {
@@ -88,7 +88,7 @@ fn examine_cubes_two(cubes: Vec<Vec<&str>>, min_cubes: &mut Cubes) -> Option<i32
     None
 }
 
-fn examine_game_two(sets: &Vec<&str>) -> Option<i32> {
+fn examine_game_two(sets: &Vec<&str>) -> Option<u32> {
     let mut min_cubes = Cubes {
         red: 0,
         green: 0,
@@ -115,7 +115,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     // Game ID
     let mut index: u32 = 1;
 
-    input
+    let result = input
         .lines()
         .map(|game| {
             // Extract sets from game
@@ -141,16 +141,16 @@ pub fn part_one(input: &str) -> Option<u32> {
                 0
             }
         })
-        .sum::<u32>()
-        .try_into()
-        .ok()
+        .sum::<u32>();
+
+    Some(result)
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
     // Game ID
-    let mut index: i32 = 1;
+    let mut index: u32 = 1;
 
-    input
+    let result = input
         .lines()
         .map(|game| {
             // Extract sets from game
@@ -168,9 +168,9 @@ pub fn part_two(input: &str) -> Option<u32> {
 
             power
         })
-        .sum::<i32>()
-        .try_into()
-        .ok()
+        .sum::<u32>();
+
+    Some(result)
 }
 
 #[cfg(test)]

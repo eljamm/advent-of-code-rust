@@ -14,7 +14,7 @@ fn count_matches(winning: Vec<&str>, hand: Vec<&str>) -> u32 {
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    input
+    let result = input
         .lines()
         .map(|line| {
             // Find where card numbers begin ':' and
@@ -28,16 +28,15 @@ pub fn part_one(input: &str) -> Option<u32> {
             let cards_right: Vec<_> = line[number_index + 2..].split_whitespace().collect();
 
             let win_count = count_matches(cards_left, cards_right);
-            let points = match win_count {
-                0 => 0,
-                _ => 1 << win_count - 1, // Double by every winning card
-            };
 
-            points
+            match win_count {
+                0 => 0,
+                _ => 0b1 << (win_count - 1), // Double by every winning card
+            }
         })
-        .sum::<u32>()
-        .try_into()
-        .ok()
+        .sum::<u32>();
+
+    Some(result)
 }
 
 fn find_indexes(line: &str) -> (usize, usize) {
@@ -76,7 +75,7 @@ pub fn part_two(input: &str) -> Option<u32> {
 
         // Add copies to the next cards, counting previously copied cards
         for i in 1..next_cards + 1 {
-            scratchcards[card_id + i as usize] += 1 * scratchcards[card_id]; // next_copies += 1 * current_copies;
+            scratchcards[card_id + i as usize] += scratchcards[card_id];
         }
     });
 

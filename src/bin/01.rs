@@ -32,8 +32,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         .map(|line| {
             let digits = line
                 .chars()
-                .map(|char| if char.is_numeric() { Some(char) } else { None })
-                .filter_map(|c| c)
+                .filter(|char| char.is_numeric())
                 .collect::<Vec<_>>();
 
             format!("{}{}", digits[0], digits[digits.len() - 1])
@@ -54,7 +53,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         .map(|line| {
             let line_rev = line.chars().rev().collect::<String>(); // reversed line
 
-            let first = letter_to_digit(regex.captures(&line).unwrap().get(0).unwrap().as_str());
+            let first = letter_to_digit(regex.captures(line).unwrap().get(0).unwrap().as_str());
             let last = letter_to_digit(
                 regex_rev
                     .captures(&line_rev)
