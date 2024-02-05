@@ -23,6 +23,7 @@ version = "0.11.0"
 dependencies = [
  "chrono",
  "dhat",
+ "indoc",
  "itertools",
  "pico-args",
  "regex",
@@ -171,6 +172,12 @@ checksum = "f31827a206f56af32e590ba56d5d2d085f558508192593743f16b2306495269f"
 dependencies = [
  "cc",
 ]
+
+[[package]]
+name = "indoc"
+version = "2.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e186cfbae8084e513daff4240b4797e342f988cecda4fb6c939150f96315fd8"
 
 [[package]]
 name = "itertools"
