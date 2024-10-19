@@ -28,3 +28,10 @@ dhat-heap.json
 # Benchmarks
 
 data/timings.json
+
+# Nix
+.devenv*
+.direnv*
+
+# pre-commit
+.pre-commit-config.yaml
