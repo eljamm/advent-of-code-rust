@@ -33,5 +33,8 @@ data/timings.json
 .devenv*
 .direnv*
 
+# Tools
+.bacon-locations
+
 # pre-commit
 .pre-commit-config.yaml
