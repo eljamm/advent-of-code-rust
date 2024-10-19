@@ -38,11 +38,14 @@ fn get_reverse_maps<'a>(lines: &'a [&'a str]) -> Vec<&'a str> {
 ///
 /// min_range = (0, 56)
 fn get_min_range(input_map: &str) -> (u64, u64) {
-    let limits: Vec<&str> = input_map.split('\n').collect();
+    let mut limits: Vec<&str> = input_map.split('\n').collect();
+    limits.pop();
+    limits.sort();
+    eprintln!("DEBUGPRINT[32]: 05.rs:43: limits={:#?}", limits);
     let mut min = (0, 0);
 
     for item in limits {
-        let (src, _dst, range) = item
+        let (dst, src, range) = item
             .split(' ')
             .filter_map(|x| {
                 if x.is_empty() {
@@ -53,16 +56,42 @@ fn get_min_range(input_map: &str) -> (u64, u64) {
             })
             .collect_tuple()
             .unwrap_or((0, 0, 0));
-        if src == 0 {
+        if dst == 0 {
             min = (src, src + range);
+            eprintln!("DEBUGPRINT[28]: 05.rs:57: range={:#?}", range);
+            eprintln!("DEBUGPRINT[27]: 05.rs:57: src={:#?}", src);
             break;
         }
-        if min == (0, 0) || src < min.1 {
-            min = (0, src);
-        }
+        // if min == (0, 0) || dst < min.1 {
+        //     min = (0, dst+range);
+        // }
     }
 
     min
+}
+
+fn get_min_ranges(input_map: &str) -> Vec<(u64, u64, u64)> {
+    let mut limits: Vec<&str> = input_map.split('\n').collect();
+    limits.pop();
+    limits.sort();
+    let mut tup_limits: Vec<(u64, u64, u64)> = Vec::with_capacity(100);
+
+    limits.iter().for_each(|item| {
+        let (dst, src, range) = item
+            .split(' ')
+            .filter_map(|x| {
+                if x.is_empty() {
+                    None
+                } else {
+                    Some(x.parse::<u64>().unwrap())
+                }
+            })
+            .collect_tuple()
+            .unwrap_or((0, 0, 0));
+        tup_limits.push((dst, src, range));
+    });
+
+    tup_limits
 }
 
 /// Map input to the next or previous almanac map
@@ -139,15 +168,29 @@ pub fn part_two(input: &str) -> Option<u64> {
     let mut min_seed = 0;
 
     let (loc_start, loc_end) = get_min_range(maps[0]);
+    let a = get_min_ranges(maps[0]);
+    eprintln!("DEBUGPRINT[35]: 05.rs:173: a={:#?}", a);
+    // eprintln!("DEBUGPRINT[24]: 05.rs:141: loc_start={:#?}", loc_start);
+    // eprintln!("DEBUGPRINT[25]: 05.rs:141: loc_end={:#?}", loc_end);
+    // let loc_start = 903174223;
+    // let loc_end = 3346797254;
 
-    for location in loc_start..loc_end {
+    for location in loc_start..loc_end + 1 {
         let mut found_min_location = false;
         let seed = process_items(0, location, &maps, &MapDirection::Reverse);
+        // // let seed_start = 903174223;
+        // // let seed_end =  3346797254;
+        // if seed >= seed_start && seed <= seed_end {
+        //     // stop on first minimum seed
+        //     eprintln!("DEBUGPRINT[19]: 05.rs:150: seed={:#?}", seed);
+        //     min_seed = seed;
+        //     break;
+        // }
         for range in &seed_ranges {
             let seed_start = range[0];
             let seed_end = range[1] + seed_start;
 
-            if seed >= seed_start && seed <= seed_end {
+            if seed > seed_start && seed < seed_end {
                 // stop on first minimum seed
                 found_min_location = true;
                 break;
@@ -219,6 +262,14 @@ mod tests {
         let loc_map = indoc! {
             "60 56 37
             56 93 4"
+        };
+
+        let result = Some(vec![get_min_range(loc_map)]);
+        assert_eq!(result, Some(vec![(0, 56)]));
+
+        let loc_map = indoc! {
+            "0 69 1
+            1 0 69"
         };
 
         let result = Some(vec![get_min_range(loc_map)]);
