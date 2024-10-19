@@ -29,6 +29,11 @@
   pre-commit.hooks = {
     clippy.enable = true;
     clippy.settings.allFeatures = true;
+
+    treefmt.enable = true;
+    treefmt.settings.formatters = [
+      pkgs.rustfmt
+    ];
   };
 
   # See full reference at https://devenv.sh/reference/options/
