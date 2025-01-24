@@ -31,8 +31,9 @@
     clippy.settings.allFeatures = true;
 
     treefmt.enable = true;
-    treefmt.settings.formatters = [
-      pkgs.rustfmt
+    treefmt.settings.formatters = with pkgs; [
+      nixfmt-rfc-style
+      rustfmt
     ];
   };
 
