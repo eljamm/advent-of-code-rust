@@ -8,7 +8,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     let (seeds, categories) = read_input(input).unwrap();
     eprintln!("DEBUGPRINT[2]: 05.rs:9: seeds={:#?}", seeds);
     eprintln!("DEBUGPRINT[3]: 05.rs:9: maps={:#?}", categories);
-    Some(0)
+    None
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
