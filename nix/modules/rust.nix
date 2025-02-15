@@ -11,16 +11,19 @@
 
       devShells.rust = pkgs.mkShell {
         packages = [
-          (pkgs.rust-bin.stable.latest.default.override {
-            extensions = [
-              "cargo"
-              "clippy"
-              "rust-src"
-              "rustc"
-              "rustfmt"
-              "rust-analyzer"
-            ];
-          })
+          (pkgs.rust-bin.selectLatestNightlyWith (
+            toolchain:
+            toolchain.minimal.override {
+              extensions = [
+                "cargo"
+                "clippy"
+                "rust-src"
+                "rustc"
+                "rustfmt"
+                "rust-analyzer"
+              ];
+            }
+          ))
         ];
       };
     };
